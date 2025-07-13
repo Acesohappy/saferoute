@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: saferoute
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: saferoute-db
+          property: connectionString
+
+databases:
+  - name: saferoute-db
+    databaseName: saferoute
+    user: saferoute

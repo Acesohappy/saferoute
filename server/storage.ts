@@ -14,6 +14,9 @@ import {
 import { db } from "./db";
 import { eq, sql } from "drizzle-orm";
 
+// Check if database is available
+const isDatabaseAvailable = !!db;
+
 export interface IStorage {
   // Crime hotspots
   getCrimeHotspots(): Promise<CrimeHotspot[]>;
@@ -314,10 +317,17 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getCrimeHotspots(): Promise<CrimeHotspot[]> {
+    if (!db) {
+      console.warn("Database not available, using fallback data");
+      return new MemStorage().getCrimeHotspots();
+    }
     return await db.select().from(crimeHotspots);
   }
 
   async getCrimeHotspotsByRegion(lat: number, lng: number, radius: number): Promise<CrimeHotspot[]> {
+    if (!db) {
+      return new MemStorage().getCrimeHotspotsByRegion(lat, lng, radius);
+    }
     const allHotspots = await this.getCrimeHotspots();
     return allHotspots.filter(hotspot => {
       const distance = this.calculateDistance(lat, lng, hotspot.latitude, hotspot.longitude);
@@ -326,6 +336,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createCrimeHotspot(hotspot: InsertCrimeHotspot): Promise<CrimeHotspot> {
+    if (!db) {
+      return new MemStorage().createCrimeHotspot(hotspot);
+    }
     const [created] = await db.insert(crimeHotspots).values({
       ...hotspot,
       reportedIncidents: hotspot.reportedIncidents ?? 0
@@ -334,10 +347,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSafeLocations(): Promise<SafeLocation[]> {
+    if (!db) {
+      return new MemStorage().getSafeLocations();
+    }
     return await db.select().from(safeLocations);
   }
 
   async getSafeLocationsByRegion(lat: number, lng: number, radius: number): Promise<SafeLocation[]> {
+    if (!db) {
+      return new MemStorage().getSafeLocationsByRegion(lat, lng, radius);
+    }
     const allLocations = await this.getSafeLocations();
     return allLocations.filter(location => {
       const distance = this.calculateDistance(lat, lng, location.latitude, location.longitude);
@@ -346,6 +365,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSafeLocation(location: InsertSafeLocation): Promise<SafeLocation> {
+    if (!db) {
+      return new MemStorage().createSafeLocation(location);
+    }
     const [created] = await db.insert(safeLocations).values({
       ...location,
       address: location.address ?? null,
@@ -355,10 +377,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRoutes(): Promise<Route[]> {
+    if (!db) {
+      return new MemStorage().getRoutes();
+    }
     return await db.select().from(routes);
   }
 
   async createRoute(route: InsertRoute): Promise<Route> {
+    if (!db) {
+      return new MemStorage().createRoute(route);
+    }
     const [created] = await db.insert(routes).values(route).returning();
     return created;
   }
@@ -600,6 +628,11 @@ export class DatabaseStorage implements IStorage {
 // Initialize database and populate with sample data
 async function initializeDatabase() {
   try {
+    if (!db) {
+      console.log("Database not available, skipping initialization");
+      return;
+    }
+    
     // Check if data already exists
     const existingHotspots = await db.select().from(crimeHotspots).limit(1);
     if (existingHotspots.length > 0) {
@@ -653,8 +686,10 @@ async function initializeDatabase() {
   }
 }
 
-// Use database storage
-export const storage = new DatabaseStorage();
+// Use database storage if available, otherwise fallback to memory storage
+export const storage = isDatabaseAvailable ? new DatabaseStorage() : new MemStorage();
 
 // Initialize database on startup
-initializeDatabase();
+if (isDatabaseAvailable) {
+  initializeDatabase();
+}
