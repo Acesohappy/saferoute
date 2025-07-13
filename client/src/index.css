@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(0, 0%, 20%);
+  --muted: hsl(0, 0%, 96%);
+  --muted-foreground: hsl(0, 0%, 45%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(0, 0%, 20%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(0, 0%, 20%);
+  --border: hsl(0, 0%, 90%);
+  --input: hsl(0, 0%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(0, 0%, 96%);
+  --secondary-foreground: hsl(0, 0%, 10%);
+  --accent: hsl(0, 0%, 96%);
+  --accent-foreground: hsl(0, 0%, 10%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(0, 0%, 20%);
+  --radius: 0.75rem;
+  
+  /* Custom colors for safety app */
+  --safe-green: hsl(122, 39%, 49%);
+  --trust-blue: hsl(207, 90%, 54%);
+  --warning-orange: hsl(36, 100%, 50%);
+  --danger-red: hsl(4, 90%, 58%);
+  --neutral-bg: hsl(0, 0%, 98%);
+  --neutral-text: hsl(0, 0%, 20%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 4%, 16%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 4%, 16%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-safe-green {
+    color: var(--safe-green);
+  }
+  
+  .text-trust-blue {
+    color: var(--trust-blue);
+  }
+  
+  .text-warning-orange {
+    color: var(--warning-orange);
+  }
+  
+  .text-danger-red {
+    color: var(--danger-red);
+  }
+  
+  .text-neutral-text {
+    color: var(--neutral-text);
+  }
+  
+  .bg-safe-green {
+    background-color: var(--safe-green);
+  }
+  
+  .bg-trust-blue {
+    background-color: var(--trust-blue);
+  }
+  
+  .bg-warning-orange {
+    background-color: var(--warning-orange);
+  }
+  
+  .bg-danger-red {
+    background-color: var(--danger-red);
+  }
+  
+  .bg-neutral-bg {
+    background-color: var(--neutral-bg);
+  }
+  
+  .border-trust-blue {
+    border-color: var(--trust-blue);
+  }
+  
+  .border-safe-green {
+    border-color: var(--safe-green);
+  }
+  
+  .border-warning-orange {
+    border-color: var(--warning-orange);
+  }
+  
+  .border-danger-red {
+    border-color: var(--danger-red);
+  }
+  
+  .hover\:bg-trust-blue:hover {
+    background-color: var(--trust-blue);
+  }
+  
+  .hover\:bg-safe-green:hover {
+    background-color: var(--safe-green);
+  }
+}
